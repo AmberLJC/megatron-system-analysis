@@ -448,6 +448,26 @@ Per-GPU computation:
 - TEGroupedMLP: Best for FP8 training, supports advanced fusions
 - SequentialMLP: Fallback, compatible with all configurations
 
+## Advanced: Communication Overlapping
+
+For large-scale MoE training where EP All-to-All communication becomes a bottleneck, Megatron-LM supports **batch-level overlapping** to hide EP communication behind dense computation from other micro-batches.
+
+This is covered in detail in **[#20 MoE Batch-Level Overlapping](20_communication_moe_batch_overlap.md)**.
+
+Key benefits:
+- **15-25% faster** MoE training for large EP sizes
+- Hides 60-90% of EP All-to-All latency behind attention/MLP computation
+- Uses separate CUDA streams for compute vs communication
+- Inspired by DeepSeek-V3's DualPipe architecture
+
+To enable:
+```bash
+--overlap-moe-expert-parallel-comm    # Enable batch-level overlapping
+--delay-wgrad-compute                 # Optional: finer-grained overlap
+```
+
+See [#20 MoE Batch-Level Overlapping](20_communication_moe_batch_overlap.md) for requirements, configuration, and detailed performance analysis.
+
 ## References
 
 - Switch Transformers: https://arxiv.org/abs/2101.03961
@@ -455,3 +475,4 @@ Per-GPU computation:
 - Global Load Balancing: https://arxiv.org/abs/2501.11873
 - DeepEP (Fused Dispatcher): https://github.com/deepseek-ai/deepep
 - Grouped GEMM: https://github.com/fanshiqing/grouped_gemm
+- DeepSeek-V3 DualPipe: https://arxiv.org/abs/2412.19437

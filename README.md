@@ -10,7 +10,7 @@ This directory contains detailed documentation of system-level optimizations in 
 
 ## Table of Contents
 
-### Communication Optimizations (01-09)
+### Communication Optimizations (01-09, 20)
 Communication is often the bottleneck in distributed training. These optimizations reduce overhead through overlapping, hierarchical strategies, and hardware-aware algorithms.
 
 1. [Gradient Bucketing and Overlap](01_communication_gradient_bucketing.md) - 20-40% throughput improvement
@@ -22,6 +22,7 @@ Communication is often the bottleneck in distributed training. These optimizatio
 7. [Coalesced Communication](07_communication_coalesced.md) - Saves ~200-1000μs per step
 8. [FP32 Gradient Accumulation](08_communication_fp32_accumulation.md) - Numerical stability at scale
 9. [Expert Parallelism Communication](09_communication_expert_parallel.md) - 10-30% MoE training speedup
+20. [MoE Batch-Level Overlapping](20_communication_moe_batch_overlap.md) - 15-25% MoE speedup via dense-expert overlap
 
 ### Parallelism Strategies (10-18)
 Multi-dimensional parallelism enables scaling to thousands of GPUs by partitioning work across different dimensions.
@@ -195,8 +196,8 @@ When documenting new optimizations:
 
 ---
 
-**Total:** 35 system optimizations documented with code snippets and performance measurements organized by:
-- **Communication** (9 optimizations): 01-09
+**Total:** 36 system optimizations documented with code snippets and performance measurements organized by:
+- **Communication** (10 optimizations): 01-09, 20
 - **Parallelism** (9 optimizations): 10-18
 - **Memory** (4 optimizations): 19, 22, 27-28
 - **Compute** (10 optimizations): 29-38

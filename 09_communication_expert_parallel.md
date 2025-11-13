@@ -326,8 +326,9 @@ moe_config = MoEConfig(
 ## Related Optimizations
 
 - **#14 Expert Parallelism:** Strategy for parallelizing experts
+- **#20 MoE Batch-Level Overlapping:** Hide EP All-to-All behind dense computation (15-25% speedup)
 - **#01 Gradient Bucketing:** Also applies to expert gradients
-- **#35 Grouped GEMM:** Optimizes expert computation itself
+- **#36 Grouped GEMM:** Optimizes expert computation itself
 
 ## Configuration Example
 
