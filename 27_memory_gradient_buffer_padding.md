@@ -95,3 +95,5 @@ ddp_config = DistributedDataParallelConfig(
 - NCCL alignment requirements: [NCCL Docs](https://docs.nvidia.com/deeplearning/nccl/)
 - Implementation: `megatron/core/distributed/param_and_grad_buffer.py`
 
+
+

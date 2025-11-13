@@ -23,7 +23,7 @@ Communication is often the bottleneck in distributed training. These optimizatio
 8. [FP32 Gradient Accumulation](08_communication_fp32_accumulation.md) - Numerical stability at scale
 9. [Expert Parallelism Communication](09_communication_expert_parallel.md) - 10-30% MoE training speedup
 
-### Parallelism Strategies (10-17)
+### Parallelism Strategies (10-18)
 Multi-dimensional parallelism enables scaling to thousands of GPUs by partitioning work across different dimensions.
 
 10. [1F1B Pipeline Scheduling](10_parallelism_1f1b.md) - 2-4x better GPU utilization than GPipe
@@ -34,34 +34,29 @@ Multi-dimensional parallelism enables scaling to thousands of GPUs by partitioni
 15. [Context Parallelism (SSM)](15_parallelism_context_parallel.md) - Long contexts for Mamba/SSM models
 16. [Gradient Sync in Pipeline Bubbles](16_parallelism_gradient_sync_bubbles.md) - "Free" gradient synchronization
 17. [Multi-Dimensional Parallelism](17_parallelism_multidimensional.md) - Combining TP×PP×DP×EP strategies
+18. [Sequence Parallelism](18_parallelism_sequence_parallel.md) - Memory-efficient sequence dimension partitioning
 
-### Memory Optimizations (18-27)
+### Memory Optimizations (19, 22, 27-28)
 Memory optimizations enable 2-3x larger models or batch sizes through careful memory management.
 
-18. [Gradient Buffer with Padding](18_memory_gradient_buffer_padding.md) - 20-30% bandwidth improvement
-19. [MXFP8 Buffer Sharing](19_memory_mxfp8_buffer_sharing.md) - Up to 50% of parameter buffer size
-20. [Activation Deallocation](20_memory_activation_deallocation.md) - Saves GBs in pipeline parallelism
-21. [Global Memory Buffer Reuse](21_memory_global_buffer_reuse.md) - Reduces fragmentation, saves ~9.6ms per step
-22. [Cached Bucket Shards](22_memory_cached_bucket_shards.md) - Saves ~200-1000μs per step
-23. [Activation Checkpointing](23_memory_activation_checkpointing.md) - 40-60% memory with 15-25% overhead
-24. [Dynamic Activation Checkpointing](24_memory_dynamic_checkpointing.md) - Enables more microbatches
-25. [CPU Offloading](25_memory_cpu_offloading.md) - 2x model size to CPU with 5-10% slowdown
-26. [FP8 Inference Padding](26_memory_fp8_padding.md) - Enables FP8 for variable lengths
-27. [Distributed Optimizer (ZeRO)](27_memory_distributed_optimizer.md) - O(DP) reduction in optimizer state
+19. [Distributed Optimizer (ZeRO)](19_memory_distributed_optimizer.md) - O(DP) reduction in optimizer state
+22. [Cached Bucket Shards](22_memory_cached_shards.md) - Saves ~200-1000μs per step
+27. [Gradient Buffer with Padding](27_memory_gradient_buffer_padding.md) - 20-30% bandwidth improvement
+28. [MXFP8 Buffer Sharing](28_memory_mxfp8_buffer_sharing.md) - Up to 50% of parameter buffer size
 
-### Compute Optimizations (28-37)
+### Compute Optimizations (29-38)
 Compute optimizations improve GPU efficiency through kernel fusion and hardware-specific acceleration.
 
-28. [CUDA Graphs](28_compute_cuda_graphs.md) - 3-8% speedup, 30x kernel launch reduction
-29. [Bias + Activation Fusion](29_compute_bias_activation_fusion.md) - 1.5-2x vs separate kernels
-30. [Fused Softmax with Masking](30_compute_fused_softmax.md) - 2-3x vs unfused
-31. [Fused Layer Normalization](31_compute_fused_layernorm.md) - 2-4x vs PyTorch
-32. [Fused Cross Entropy](32_compute_fused_cross_entropy.md) - Saves 100GB+ for large vocab
-33. [Fused RoPE](33_compute_fused_rope.md) - 1.5-2x for rotary embeddings
-34. [Gradient Accumulation Fusion](34_compute_gradient_accumulation_fusion.md) - 2-5% cumulative speedup
-35. [Grouped GEMM for MoE](35_compute_grouped_gemm.md) - 2-3x vs sequential expert GEMMs
-36. [FP8 Training Infrastructure](36_compute_fp8_training.md) - 1.5-2x training on H100+
-37. [MXFP8 Blockwise Scaling](37_compute_mxfp8_scaling.md) - Better accuracy than standard FP8
+29. [CUDA Graphs](29_compute_cuda_graphs.md) - 3-8% speedup, 30x kernel launch reduction
+30. [Bias + Activation Fusion](30_compute_bias_activation_fusion.md) - 1.5-2x vs separate kernels
+31. [Fused Softmax with Masking](31_compute_fused_softmax.md) - 2-3x vs unfused
+32. [Fused Layer Normalization](32_compute_fused_layernorm.md) - 2-4x vs PyTorch
+33. [Fused Cross Entropy](33_compute_fused_cross_entropy.md) - Saves 100GB+ for large vocab
+34. [Fused RoPE](34_compute_fused_rope.md) - 1.5-2x for rotary embeddings
+35. [Gradient Accumulation Fusion](35_compute_grad_accumulation_fusion.md) - 2-5% cumulative speedup
+36. [Grouped GEMM for MoE](36_compute_grouped_gemm.md) - 2-3x vs sequential expert GEMMs
+37. [FP8 Training Infrastructure](37_compute_fp8_training.md) - 1.5-2x training on H100+
+38. [MXFP8 Blockwise Scaling](38_compute_mxfp8_scaling.md) - Better accuracy than standard FP8
 
 ## Quick Start
 
@@ -69,22 +64,22 @@ Compute optimizations improve GPU efficiency through kernel fusion and hardware-
 Start with these essential optimizations:
 1. **Gradient Bucketing** ([#01](01_communication_gradient_bucketing.md)) - Enable `overlap_grad_reduce=True`
 2. **1F1B Pipeline** ([#10](10_parallelism_1f1b.md)) - Set `num_microbatches = 4-8 × pipeline_stages`
-3. **Distributed Optimizer** ([#27](27_memory_distributed_optimizer.md)) - Enable `use_distributed_optimizer=True`
-4. **Activation Deallocation** ([#20](20_memory_activation_deallocation.md)) - Enable `deallocate_pipeline_outputs=True`
+3. **Distributed Optimizer** ([#19](19_memory_distributed_optimizer.md)) - Enable `use_distributed_optimizer=True`
+4. **Sequence Parallelism** ([#03](03_communication_sequence_parallel.md)) - Enable with tensor parallelism
 
 ### For Maximum Performance
 Add these optimizations after basics:
 1. **NCCL Symmetric Memory** ([#02](02_communication_nccl_symmetric.md)) - 20% speedup on NVLink
 2. **TP Overlap** ([#04](04_communication_tp_overlap.md)) - Set `export CUDA_DEVICE_MAX_CONNECTIONS=1`
-3. **CUDA Graphs** ([#28](28_compute_cuda_graphs.md)) - 3-8% speedup for static shapes
-4. **Kernel Fusion** ([#29-34](29_compute_bias_activation_fusion.md)) - Install Apex/TransformerEngine
+3. **CUDA Graphs** ([#29](29_compute_cuda_graphs.md)) - 3-8% speedup for static shapes
+4. **Kernel Fusion** ([#30-38](30_compute_bias_activation_fusion.md)) - Install Apex/TransformerEngine
 
 ### For Memory-Constrained Training
 Use these to fit larger models:
-1. **Activation Checkpointing** ([#23](23_memory_activation_checkpointing.md)) - 40-60% memory savings
-2. **Distributed Optimizer** ([#27](27_memory_distributed_optimizer.md)) - O(DP) reduction
+1. **Sequence Parallelism** ([#18](18_parallelism_sequence_parallel.md)) - Reduce activation memory
+2. **Distributed Optimizer** ([#19](19_memory_distributed_optimizer.md)) - O(DP) reduction
 3. **Pipeline Parallelism** ([#10](10_parallelism_1f1b.md)) - Split across stages
-4. **CPU Offloading** ([#25](25_memory_cpu_offloading.md)) - Last resort for extreme constraints
+4. **Gradient Buffer Padding** ([#27](27_memory_gradient_buffer_padding.md)) - Improved bandwidth
 
 ## Performance Impact Summary
 
@@ -154,9 +149,9 @@ export NCCL_NVLS_ENABLE=1                  # Force NVLS (testing)
 4. Profile with Nsight Systems
 
 ### Out of Memory (OOM)
-1. Enable [Distributed Optimizer](#27)
-2. Enable [Activation Deallocation](#20)
-3. Add [Activation Checkpointing](#23)
+1. Enable [Distributed Optimizer](#19)
+2. Enable [Sequence Parallelism](#03)
+3. Use [Gradient Buffer Padding](#27)
 4. Reduce microbatch size or increase pipeline stages
 
 ### Poor Scaling Efficiency
@@ -200,4 +195,8 @@ When documenting new optimizations:
 
 ---
 
-**Total:** 37 system optimizations documented with code snippets and performance measurements.
+**Total:** 35 system optimizations documented with code snippets and performance measurements organized by:
+- **Communication** (9 optimizations): 01-09
+- **Parallelism** (9 optimizations): 10-18
+- **Memory** (4 optimizations): 19, 22, 27-28
+- **Compute** (10 optimizations): 29-38

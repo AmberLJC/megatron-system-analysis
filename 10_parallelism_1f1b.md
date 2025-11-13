@@ -304,3 +304,5 @@ analyze_bubble_time(pipeline_stages=8, num_microbatches=64)
 - Megatron-LM: [Efficient Large-Scale Language Model Training](https://arxiv.org/abs/2104.04473)
 - Implementation: `megatron/core/pipeline_parallel/schedules.py`
 
+
+

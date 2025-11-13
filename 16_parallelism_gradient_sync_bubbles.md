@@ -130,3 +130,5 @@ assert grad_sync_time < bubble_time, "Gradient sync fits in bubble!"
 - Megatron paper: [Efficient Large-Scale Language Model Training](https://arxiv.org/abs/2104.04473)
 - Implementation: `megatron/core/pipeline_parallel/schedules.py`
 
+
+

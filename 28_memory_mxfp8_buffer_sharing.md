@@ -105,3 +105,5 @@ config = TransformerConfig(
 - FP8 training: See optimization #36
 - Implementation: `megatron/core/distributed/param_and_grad_buffer.py`
 
+
+

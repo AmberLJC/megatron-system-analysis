@@ -94,3 +94,5 @@ ddp_config = DistributedDataParallelConfig(
 - PyTorch DDP: [DistributedDataParallel](https://pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html)
 - ZeRO paper: [ZeRO](https://arxiv.org/abs/1910.02054)
 
+
+
