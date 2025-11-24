@@ -859,3 +859,4 @@ MFU (Model FLOPs Utilization) improves with scale due to better batching but com
 - Implementation: `megatron/core/parallel_state.py`, `megatron/core/process_groups_config.py`
 - 3D Parallelism blog: https://developer.nvidia.com/blog/scaling-language-model-training-to-a-trillion-parameters-using-megatron/
 - Process group documentation: `docs/source/api-guide/parallelism.rst`
+

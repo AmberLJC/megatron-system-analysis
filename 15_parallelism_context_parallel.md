@@ -517,3 +517,4 @@ config = TransformerConfig(
 - Ring Attention paper: Liu et al., "Ring Attention with Blockwise Transformers"
 - DeepSpeed Ulysses: Microsoft DeepSpeed documentation
 - Implementation: `megatron/core/extensions/transformer_engine.py`, `megatron/core/ssm/mamba_context_parallel.py`
+

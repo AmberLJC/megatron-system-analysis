@@ -24,7 +24,7 @@ Communication is often the bottleneck in distributed training. These optimizatio
 9. [Expert Parallelism Communication](09_communication_expert_parallel.md) - 10-30% MoE training speedup
 20. [MoE Batch-Level Overlapping](20_communication_moe_batch_overlap.md) - 15-25% MoE speedup via dense-expert overlap
 
-### Parallelism Strategies (10-18)
+### Parallelism Strategies (10-18, 40)
 Multi-dimensional parallelism enables scaling to thousands of GPUs by partitioning work across different dimensions.
 
 10. [1F1B Pipeline Scheduling](10_parallelism_1f1b.md) - 2-4x better GPU utilization than GPipe
@@ -36,6 +36,7 @@ Multi-dimensional parallelism enables scaling to thousands of GPUs by partitioni
 16. [Gradient Sync in Pipeline Bubbles](16_parallelism_gradient_sync_bubbles.md) - "Free" gradient synchronization
 17. [Multi-Dimensional Parallelism](17_parallelism_multidimensional.md) - Combining TP×PP×DP×EP strategies
 18. [Sequence Parallelism](18_parallelism_sequence_parallel.md) - Memory-efficient sequence dimension partitioning
+40. [Deferred Embedding WGRAD](40_parallelism_deferred_embedding_wgrad.md) - 5-15% speedup via deferred gradient computation
 
 ### Memory Optimizations (19, 22, 27-28)
 Memory optimizations enable 2-3x larger models or batch sizes through careful memory management.
@@ -196,8 +197,9 @@ When documenting new optimizations:
 
 ---
 
-**Total:** 36 system optimizations documented with code snippets and performance measurements organized by:
+**Total:** 39 system optimizations documented with code snippets and performance measurements organized by:
 - **Communication** (10 optimizations): 01-09, 20
-- **Parallelism** (9 optimizations): 10-18
+- **Parallelism** (10 optimizations): 10-18, 40
 - **Memory** (4 optimizations): 19, 22, 27-28
 - **Compute** (10 optimizations): 29-38
+- **Other** (1 optimization): 39

@@ -760,3 +760,4 @@ The composition allows flexible resource allocation: increase TP/PP to fit large
 ## Conclusion
 
 Data parallelism in Megatron-LM provides essential scalability for training at massive scale. Through sophisticated gradient bucketing, overlapped asynchronous communication, and optional distributed optimizer integration (ZeRO-2 style), it achieves excellent scaling efficiency of 85-95% while offering flexibility in memory-performance trade-offs. The implementation seamlessly handles complex scenarios including mixed precision training, expert parallelism in MoE models, and tight integration with tensor and pipeline parallelism. This makes data parallelism a robust and efficient foundation for multi-dimensional parallel training strategies capable of scaling to thousands of GPUs.
+

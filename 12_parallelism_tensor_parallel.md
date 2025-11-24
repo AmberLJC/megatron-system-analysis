@@ -634,3 +634,4 @@ config = ModelParallelConfig(
 - TP size would exceed 8 (diminishing returns, combine with pipeline parallelism)
 
 Tensor parallelism is the foundation of Megatron-LM's multi-dimensional parallelism strategy, typically combined with pipeline parallelism (between nodes) and data parallelism (across data parallel groups) to achieve efficient training of models with hundreds of billions of parameters.
+

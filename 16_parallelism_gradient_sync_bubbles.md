@@ -659,3 +659,4 @@ Gradient synchronization in pipeline bubbles is a sophisticated optimization tha
 5. **Gradient finalization** ensures completion before optimizer step (`finalize_model_grads()`)
 
 With proper configuration, this optimization can hide 100% of gradient communication time in the pipeline bubble, saving 2-5 seconds per training step and enabling efficient training runs with deep pipeline parallelism (16-32 stages) at massive scale. This is one of the key innovations that allows Megatron-LM to achieve state-of-the-art training efficiency for models in the hundreds of billions of parameters.
+
