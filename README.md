@@ -2,9 +2,76 @@
 
 This directory contains a comprehensive analysis of optimizations implemented in Megatron-LM for training large language models at scale. The optimizations span four major categories: **Communication**, **Parallelism**, **Memory**, and **Compute**.
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Repository Structure](#repository-structure)
+- [Optimization Summary](#optimization-summary)
+- [Category Breakdown](#category-breakdown)
+  - [Communication Optimizations](#communication-optimizations-10-techniques)
+  - [Parallelism Optimizations](#parallelism-optimizations-15-techniques)
+  - [Memory Optimizations](#memory-optimizations-5-techniques)
+  - [Compute Optimizations](#compute-optimizations-10-techniques)
+- [How to Use This Repository](#how-to-use-this-repository)
+
+---
+
 ## Overview
 
 The Megatron-LM system employs sophisticated techniques across multiple optimization categories to maximize GPU utilization and minimize communication overhead during large-scale training. These optimizations are essential for efficiently training models with billions to trillions of parameters across distributed GPU clusters.
+
+---
+
+## Repository Structure
+
+```
+megatron-system-analysis/
+├── README.md
+├── communication/          # Communication optimization techniques
+│   ├── 01_communication_gradient_bucketing.md
+│   ├── 02_communication_nccl_symmetric.md
+│   ├── 03_communication_sequence_parallel.md
+│   ├── 04_communication_tp_overlap.md
+│   ├── 05_communication_hierarchical.md
+│   ├── 06_communication_p2p_modes.md
+│   ├── 07_communication_coalesced.md
+│   ├── 08_communication_fp32_accumulation.md
+│   ├── 09_communication_expert_parallel.md
+│   └── 20_communication_moe_batch_overlap.md
+├── parallelism/            # Parallelism strategies and scheduling
+│   ├── 10_parallelism_1f1b.md
+│   ├── 11_parallelism_interleaved_1f1b.md
+│   ├── 12_parallelism_tensor_parallel.md
+│   ├── 13_parallelism_data_parallel.md
+│   ├── 14_parallelism_expert_parallel.md
+│   ├── 15_parallelism_context_parallel.md
+│   ├── 16_parallelism_gradient_sync_bubbles.md
+│   ├── 17_parallelism_multidimensional.md
+│   ├── 18_parallelism_sequence_parallel.md
+│   ├── 39_moe_load_balancing_expert_dropout.md
+│   ├── 40_parallelism_deferred_embedding_wgrad.md
+│   ├── 41_parallelism_pipeline_optimizations.md
+│   ├── 42_parallelism_tp_degree_tuning.md
+│   ├── 43_long_context_training.md
+│   └── 44_expert_parallel_optimizations.md
+├── memory/                 # Memory optimization techniques
+│   ├── 19_memory_distributed_optimizer.md
+│   ├── 21_memory_zero_fsdp_hsdp.md
+│   ├── 22_memory_cached_shards.md
+│   ├── 27_memory_gradient_buffer_padding.md
+│   └── 28_memory_mxfp8_buffer_sharing.md
+└── compute/                # Compute optimization and kernel fusion
+    ├── 29_compute_cuda_graphs.md
+    ├── 30_compute_bias_activation_fusion.md
+    ├── 31_compute_fused_softmax.md
+    ├── 32_compute_fused_layernorm.md
+    ├── 33_compute_fused_cross_entropy.md
+    ├── 34_compute_fused_rope.md
+    ├── 35_compute_grad_accumulation_fusion.md
+    ├── 36_compute_grouped_gemm.md
+    ├── 37_compute_fp8_training.md
+    └── 38_compute_mxfp8_scaling.md
+```
 
 ---
 
@@ -53,56 +120,85 @@ The Megatron-LM system employs sophisticated techniques across multiple optimiza
 
 ## Category Breakdown
 
-### Communication Optimizations (9 techniques)
+<details>
+<summary><strong>Communication Optimizations (10 techniques)</strong></summary>
+
 These optimizations focus on reducing communication overhead in distributed training through overlapping, hierarchical approaches, and efficient collective algorithms.
 
-- **Gradient Bucketing** (01): Asynchronous bucket-level all-reduce with reverse-order bucketing
-- **NCCL Symmetric Modes** (02): Hardware-efficient collective operations
-- **Sequence Parallel Communication** (03): Reduced communication volume in sequence-parallel attention
-- **Tensor Parallel Overlap** (04): Async all-gather/all-reduce with computation overlap
-- **Hierarchical Collectives** (05): Multi-level topology-aware communication
-- **Point-to-Point Communication** (06): Flexible P2P patterns for expert parallelism
-- **Coalesced Communication** (07): Combined collective operations
-- **FP32 Accumulation** (08): Numerically stable gradient reduction
-- **Expert Parallel Communication** (09): All-to-all routing and gathering for sparse models
+| File | Optimization | Description |
+|------|-------------|-------------|
+| [01_communication_gradient_bucketing.md](communication/01_communication_gradient_bucketing.md) | Gradient Bucketing | Asynchronous bucket-level all-reduce with reverse-order bucketing |
+| [02_communication_nccl_symmetric.md](communication/02_communication_nccl_symmetric.md) | NCCL Symmetric Modes | Hardware-efficient collective operations |
+| [03_communication_sequence_parallel.md](communication/03_communication_sequence_parallel.md) | Sequence Parallel Communication | Reduced communication volume in sequence-parallel attention |
+| [04_communication_tp_overlap.md](communication/04_communication_tp_overlap.md) | Tensor Parallel Overlap | Async all-gather/all-reduce with computation overlap |
+| [05_communication_hierarchical.md](communication/05_communication_hierarchical.md) | Hierarchical Collectives | Multi-level topology-aware communication |
+| [06_communication_p2p_modes.md](communication/06_communication_p2p_modes.md) | Point-to-Point Communication | Flexible P2P patterns for expert parallelism |
+| [07_communication_coalesced.md](communication/07_communication_coalesced.md) | Coalesced Communication | Combined collective operations |
+| [08_communication_fp32_accumulation.md](communication/08_communication_fp32_accumulation.md) | FP32 Accumulation | Numerically stable gradient reduction |
+| [09_communication_expert_parallel.md](communication/09_communication_expert_parallel.md) | Expert Parallel Communication | All-to-all routing and gathering for sparse models |
+| [20_communication_moe_batch_overlap.md](communication/20_communication_moe_batch_overlap.md) | MoE Batch Overlap | Overlap token movement with expert computation |
 
-### Parallelism Optimizations (10 techniques)
+</details>
+
+<details>
+<summary><strong>Parallelism Optimizations (15 techniques)</strong></summary>
+
 These optimizations enable training across multiple GPUs and improve utilization through clever scheduling and partitioning strategies.
 
-- **1F1B Pipeline Scheduling** (10): Interleaved forward-backward for pipeline parallelism
-- **Interleaved 1F1B** (11): Enhanced 1F1B with virtual pipeline stages
-- **Tensor Parallelism** (12): Intra-layer weight matrix partitioning
-- **Data Parallelism** (13): Standard distributed training with bucket overlap
-- **Expert Parallelism** (14): Sparse model expert distribution
-- **Context Parallelism** (15): Sequence-dimension partitioning
-- **Gradient Sync Bubbles** (16): Minimized synchronization overhead
-- **Multidimensional Parallelism** (17): Combined TP × DP × PP × EP strategies
-- **Sequence Parallelism** (18): Attention-aware sequence splitting
-- **MoE Load Balancing + Expert Dropout** (39): Token-expert assignment balancing
-- **Deferred Embedding Gradient** (40): Delayed weight updates for pipeline balancing
+| File | Optimization | Description |
+|------|-------------|-------------|
+| [10_parallelism_1f1b.md](parallelism/10_parallelism_1f1b.md) | 1F1B Pipeline Scheduling | Interleaved forward-backward for pipeline parallelism |
+| [11_parallelism_interleaved_1f1b.md](parallelism/11_parallelism_interleaved_1f1b.md) | Interleaved 1F1B | Enhanced 1F1B with virtual pipeline stages |
+| [12_parallelism_tensor_parallel.md](parallelism/12_parallelism_tensor_parallel.md) | Tensor Parallelism | Intra-layer weight matrix partitioning |
+| [13_parallelism_data_parallel.md](parallelism/13_parallelism_data_parallel.md) | Data Parallelism | Standard distributed training with bucket overlap |
+| [14_parallelism_expert_parallel.md](parallelism/14_parallelism_expert_parallel.md) | Expert Parallelism | Sparse model expert distribution |
+| [15_parallelism_context_parallel.md](parallelism/15_parallelism_context_parallel.md) | Context Parallelism | Sequence-dimension partitioning |
+| [16_parallelism_gradient_sync_bubbles.md](parallelism/16_parallelism_gradient_sync_bubbles.md) | Gradient Sync Bubbles | Minimized synchronization overhead |
+| [17_parallelism_multidimensional.md](parallelism/17_parallelism_multidimensional.md) | Multidimensional Parallelism | Combined TP × DP × PP × EP strategies |
+| [18_parallelism_sequence_parallel.md](parallelism/18_parallelism_sequence_parallel.md) | Sequence Parallelism | Attention-aware sequence splitting |
+| [39_moe_load_balancing_expert_dropout.md](parallelism/39_moe_load_balancing_expert_dropout.md) | MoE Load Balancing + Expert Dropout | Token-expert assignment balancing |
+| [40_parallelism_deferred_embedding_wgrad.md](parallelism/40_parallelism_deferred_embedding_wgrad.md) | Deferred Embedding Gradient | Delayed weight updates for pipeline balancing |
+| [41_parallelism_pipeline_optimizations.md](parallelism/41_parallelism_pipeline_optimizations.md) | Pipeline Optimizations | Advanced pipeline scheduling techniques |
+| [42_parallelism_tp_degree_tuning.md](parallelism/42_parallelism_tp_degree_tuning.md) | TP Degree Tuning | Tensor parallelism degree optimization |
+| [43_long_context_training.md](parallelism/43_long_context_training.md) | Long Context Training | Techniques for training with long sequences |
+| [44_expert_parallel_optimizations.md](parallelism/44_expert_parallel_optimizations.md) | Expert Parallel Optimizations | Advanced expert parallelism techniques |
 
-### Memory Optimizations (6 techniques)
+</details>
+
+<details>
+<summary><strong>Memory Optimizations (5 techniques)</strong></summary>
+
 These optimizations reduce GPU memory consumption through clever buffer management and state sharding.
 
-- **Distributed Optimizer (ZeRO-2)** (19): Sharded optimizer states and gradients
-- **ZeRO/FSDP** (21): Full parameter sharding across DP ranks
-- **Cached Shards** (22): Local parameter shard caching
-- **Gradient Buffer Padding** (27): Aligned buffer allocation
-- **MxFP8 Buffer Sharing** (28): Reused FP8 buffers for multiple operations
+| File | Optimization | Description |
+|------|-------------|-------------|
+| [19_memory_distributed_optimizer.md](memory/19_memory_distributed_optimizer.md) | Distributed Optimizer (ZeRO-2) | Sharded optimizer states and gradients |
+| [21_memory_zero_fsdp_hsdp.md](memory/21_memory_zero_fsdp_hsdp.md) | ZeRO/FSDP/HSDP | Full parameter sharding across DP ranks |
+| [22_memory_cached_shards.md](memory/22_memory_cached_shards.md) | Cached Shards | Local parameter shard caching |
+| [27_memory_gradient_buffer_padding.md](memory/27_memory_gradient_buffer_padding.md) | Gradient Buffer Padding | Aligned buffer allocation |
+| [28_memory_mxfp8_buffer_sharing.md](memory/28_memory_mxfp8_buffer_sharing.md) | MxFP8 Buffer Sharing | Reused FP8 buffers for multiple operations |
 
-### Compute Optimizations (10 techniques)
+</details>
+
+<details>
+<summary><strong>Compute Optimizations (10 techniques)</strong></summary>
+
 These optimizations improve computation efficiency through kernel fusion and lower precision training.
 
-- **CUDA Graphs** (29): Static kernel sequence capture and replay
-- **Bias + Activation Fusion** (30): Combined bias and activation kernels
-- **Fused Softmax** (31): Softmax with prior operations
-- **Fused LayerNorm** (32): Normalization with subsequent operations
-- **Fused Cross-Entropy** (33): Softmax + loss calculation
-- **Fused RoPE** (34): Rotary embeddings in matrix multiplication
-- **Grad Accumulation Fusion** (35): Gradient accumulation with computation
-- **Grouped GEMM** (36): Batched small matrix multiplications
-- **FP8 Training** (37): 8-bit floating point with adaptive scaling
-- **MxFP8 Scaling** (38): Advanced multi-axial FP8 quantization
+| File | Optimization | Description |
+|------|-------------|-------------|
+| [29_compute_cuda_graphs.md](compute/29_compute_cuda_graphs.md) | CUDA Graphs | Static kernel sequence capture and replay |
+| [30_compute_bias_activation_fusion.md](compute/30_compute_bias_activation_fusion.md) | Bias + Activation Fusion | Combined bias and activation kernels |
+| [31_compute_fused_softmax.md](compute/31_compute_fused_softmax.md) | Fused Softmax | Softmax with prior operations |
+| [32_compute_fused_layernorm.md](compute/32_compute_fused_layernorm.md) | Fused LayerNorm | Normalization with subsequent operations |
+| [33_compute_fused_cross_entropy.md](compute/33_compute_fused_cross_entropy.md) | Fused Cross-Entropy | Softmax + loss calculation |
+| [34_compute_fused_rope.md](compute/34_compute_fused_rope.md) | Fused RoPE | Rotary embeddings in matrix multiplication |
+| [35_compute_grad_accumulation_fusion.md](compute/35_compute_grad_accumulation_fusion.md) | Grad Accumulation Fusion | Gradient accumulation with computation |
+| [36_compute_grouped_gemm.md](compute/36_compute_grouped_gemm.md) | Grouped GEMM | Batched small matrix multiplications |
+| [37_compute_fp8_training.md](compute/37_compute_fp8_training.md) | FP8 Training | 8-bit floating point with adaptive scaling |
+| [38_compute_mxfp8_scaling.md](compute/38_compute_mxfp8_scaling.md) | MxFP8 Scaling | Advanced multi-axial FP8 quantization |
+
+</details>
 
 ---
 
@@ -112,50 +208,15 @@ Each markdown file contains:
 1. **Overview**: High-level description of the optimization and its motivation
 2. **Problem Statement**: Performance analysis showing the inefficiency being addressed
 3. **Solution**: Detailed explanation of the optimization technique
-4. **Implementation Details**: Code examples and architecture specifics (limited to 3 sentences as per documentation)
+4. **Implementation Details**: Code examples and architecture specifics
 5. **Performance Impact**: Measured or theoretical performance improvements
 6. **References**: Links to relevant code locations in Megatron-LM
 
 ### File Naming Convention
 
-Files are numbered by category and optimization order:
-- `01-09`: Communication optimizations
-- `10-18`: Parallelism optimizations
-- `19-28`: Memory optimizations (with some gaps)
-- `29-40`: Compute optimizations and advanced parallelism techniques
+Files are numbered and organized by category:
+- `communication/`: Files 01-09, 20 - Communication optimizations
+- `parallelism/`: Files 10-18, 39-44 - Parallelism strategies
+- `memory/`: Files 19, 21-22, 27-28 - Memory optimizations
+- `compute/`: Files 29-38 - Compute optimizations and kernel fusion
 
----
-
-## Key Insights
-
-### Layered Optimization Approach
-Megatron-LM achieves efficiency through multiple overlapping optimizations:
-1. **Communication layer**: Gradient bucketing, overlap, hierarchical patterns
-2. **Computation layer**: Kernel fusion, CUDA graphs, lower precision
-3. **Memory layer**: State sharding, buffer reuse, caching
-4. **Parallelism layer**: Multi-dimensional strategies with careful scheduling
-
-### Synergistic Effects
-These optimizations work together rather than in isolation:
-- Distributed optimizer (19) requires careful gradient communication (01, 04)
-- 1F1B scheduling (10) enables better utilization of communication overlap (04, 08)
-- Kernel fusion (30-35) reduces overhead that would otherwise hide behind communication overlap (01, 04)
-- FP8 training (37) works with MxFP8 buffer sharing (28) for maximum efficiency
-
-### Scaling Characteristics
-- **Small to medium clusters (≤128 GPUs)**: Focus on gradient bucketing, 1F1B, kernel fusion
-- **Large clusters (128-1024 GPUs)**: Add hierarchical communication, context/sequence parallelism
-- **Massive clusters (>1024 GPUs)**: Full multidimensional parallelism with all optimizations enabled
-
----
-
-## References and Additional Reading
-
-For detailed technical analysis of each optimization, refer to the individual markdown files in this directory. Each file provides:
-- Detailed problem analysis with performance measurements
-- Mathematical formulations and algorithmic pseudocode
-- Actual code snippets from Megatron-LM implementation
-- Scaling characteristics and benchmarks
-- Integration guidelines with other optimizations
-
-Start with the numbered files in order to understand the progression from foundational techniques (gradient bucketing, 1F1B) to advanced optimizations (multidimensional parallelism, FP8 training).
