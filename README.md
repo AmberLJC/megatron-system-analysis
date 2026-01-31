@@ -12,6 +12,7 @@ This directory contains a comprehensive analysis of optimizations implemented in
   - [Parallelism Optimizations](#parallelism-optimizations-15-techniques)
   - [Memory Optimizations](#memory-optimizations-5-techniques)
   - [Compute Optimizations](#compute-optimizations-10-techniques)
+- [Monthly Progress Reports](#monthly-progress-reports)
 - [How to Use This Repository](#how-to-use-this-repository)
 
 ---
@@ -60,17 +61,24 @@ megatron-system-analysis/
 │   ├── 22_memory_cached_shards.md
 │   ├── 27_memory_gradient_buffer_padding.md
 │   └── 28_memory_mxfp8_buffer_sharing.md
-└── compute/                # Compute optimization and kernel fusion
-    ├── 29_compute_cuda_graphs.md
-    ├── 30_compute_bias_activation_fusion.md
-    ├── 31_compute_fused_softmax.md
-    ├── 32_compute_fused_layernorm.md
-    ├── 33_compute_fused_cross_entropy.md
-    ├── 34_compute_fused_rope.md
-    ├── 35_compute_grad_accumulation_fusion.md
-    ├── 36_compute_grouped_gemm.md
-    ├── 37_compute_fp8_training.md
-    └── 38_compute_mxfp8_scaling.md
+├── compute/                # Compute optimization and kernel fusion
+│   ├── 29_compute_cuda_graphs.md
+│   ├── 30_compute_bias_activation_fusion.md
+│   ├── 31_compute_fused_softmax.md
+│   ├── 32_compute_fused_layernorm.md
+│   ├── 33_compute_fused_cross_entropy.md
+│   ├── 34_compute_fused_rope.md
+│   ├── 35_compute_grad_accumulation_fusion.md
+│   ├── 36_compute_grouped_gemm.md
+│   ├── 37_compute_fp8_training.md
+│   └── 38_compute_mxfp8_scaling.md
+└── monthly-update/         # Monthly development progress reports
+    ├── megatron-monthly-report-august-2025.md
+    ├── megatron-monthly-report-september-2025.md
+    ├── megatron-monthly-report-october-2025.md
+    ├── megatron-monthly-report-november-2025.md
+    ├── megatron-monthly-report-december-2025.md
+    └── megatron-monthly-report-january-2026.md
 ```
 
 ---
@@ -199,6 +207,26 @@ These optimizations improve computation efficiency through kernel fusion and low
 | [38_compute_mxfp8_scaling.md](compute/38_compute_mxfp8_scaling.md) | MxFP8 Scaling | Advanced multi-axial FP8 quantization |
 
 </details>
+
+---
+
+## Monthly Progress Reports
+
+The `monthly-update/` directory contains detailed monthly progress reports tracking Megatron-LM development from August 2025 onwards. Each report provides:
+
+- **Executive Summary**: High-level overview of the month's key developments
+- **Feature Deep Dives**: Technical details on new features, PRs, and architectural changes
+- **Performance Improvements**: Benchmarks and optimization results
+- **Code Changes**: Summary of files modified, lines added/removed
+
+| Report | Key Highlights |
+|--------|---------------|
+| [August 2025](monthly-update/megatron-monthly-report-august-2025.md) | Initial monthly tracking, foundational improvements |
+| [September 2025](monthly-update/megatron-monthly-report-september-2025.md) | Infrastructure and parallelism enhancements |
+| [October 2025](monthly-update/megatron-monthly-report-october-2025.md) | Memory optimization and debugging tools |
+| [November 2025](monthly-update/megatron-monthly-report-november-2025.md) | MoE and expert parallelism advances |
+| [December 2025](monthly-update/megatron-monthly-report-december-2025.md) | End-of-year consolidation and cleanup |
+| [January 2026](monthly-update/megatron-monthly-report-january-2026.md) | Configuration modernization, CUDA graph optimizations, 12,840+ lines legacy code removal |
 
 ---
 
